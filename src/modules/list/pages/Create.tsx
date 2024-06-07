@@ -3,8 +3,12 @@
 import { RouterConfig } from "@/core/constants/router";
 import listApi from "@/shared/services/api/list.api";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const ListCreatePage: React.FC<{}> = () => {
+  const router = useRouter();
+
   const breadcrumbs: any = [
     {
       title: "Lists",
@@ -18,14 +22,14 @@ const ListCreatePage: React.FC<{}> = () => {
 
   const submit = async (e: any) => {
     e.preventDefault();
-    const name = (document.getElementById("name") as HTMLInputElement)?.value;
-    const description = (
-      document.getElementById("description") as HTMLInputElement
-    )?.value;
-    if (!name) return;
-    const body = { name, description };
+    const todo = (document.getElementById("name") as HTMLInputElement)?.value;
+    if (!todo) return;
+    const body = { todo, completed: false, userId: 5 };
     const response = await listApi.create(body);
-    console.log(response);
+    if (response.status === 201) {
+      toast.success("Successfully created!");
+      router.push(RouterConfig.LIST);
+    }
   };
 
   return (

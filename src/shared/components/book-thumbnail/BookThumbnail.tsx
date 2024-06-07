@@ -1,14 +1,18 @@
 import Link from "next/link";
 import RatingComponent from "../rating/Rating";
+import Image from "next/image";
 
 const BookThumbnailComponent: React.FC<any> = ({ item }) => {
   return (
     <div className="w-full max-w-sm  border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <Link className="text-center" href="/">
-        <img
+        <Image
           className="p-2 rounded-t-lg h-72 w-full object-contain bg-white"
           src={item?.thumbnail}
           alt="book cover"
+          width={300}
+          height={400}
+          loading="lazy"
         />
       </Link>
       <div className="px-5 pb-5">

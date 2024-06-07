@@ -3,16 +3,61 @@ import baseApi from "./base.api";
 import { CreateListRequest } from "@/modules/list/types/list.model";
 
 const listApi = {
-  // Not support any more
-  create: async (request: CreateListRequest) => {
-    const response = await baseApi.postData(`people/${PEOPLE}/lists`, request);
-    console.log(response);
+  baseApi: "https://dummyjson.com/todos",
+  getList: async (request?: { [key: string]: string }) => {
+    let urlParams = '';
+    if(request) {
+      const params = new URLSearchParams(request);
+      urlParams = '?' + params.toString();
+    }
+    const response = await fetch(listApi.baseApi + urlParams, {
+      method: "GET",
+    }).then(async (res) => {
+      return {
+        status: res.status,
+        data: await res.json(),
+      };
+    });
     return response;
   },
 
-  getList: async () => {
-    const response = await baseApi.getData(`people/${PEOPLE}/lists.json`);
-    console.log(response);
+  create: async (request: CreateListRequest) => {
+    const response = await fetch(listApi.baseApi + "/add", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    }).then(async (res) => {
+      return {
+        status: res.status,
+        data: await res.json(),
+      };
+    });
+    return response;
+  },
+
+  update: async (id: number, request: any) => {
+    const response = await fetch(listApi.baseApi +"/" + id, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(request),
+    }).then(async (res) => {
+      return {
+        status: res.status,
+        data: await res.json(),
+      };
+    });
+    return response;
+  },
+
+  delete: async (id: number) => {
+    const response = await fetch(listApi.baseApi + "/" + id, {
+      method: "DELETE",
+    }).then(async (res) => {
+      return {
+        status: res.status,
+        data: await res.json(),
+      };
+    });
     return response;
   },
 };

@@ -1,10 +1,10 @@
 import SubjectModule from "@/modules/subjects/pages/Subject";
-import { Suspense } from "react";
 
-export default function Page() {
-  return (
-    <Suspense>
-      <SubjectModule />
-    </Suspense>
-  );
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const subject = searchParams?.name?.toString() ?? "";
+  return <SubjectModule subject={subject} />;
 }

@@ -4,30 +4,11 @@ import BookThumbnailComponent from "@components/book-thumbnail/BookThumbnail";
 import { useEffect, useState } from "react";
 
 interface IProps {
+  list: any;
   title: string;
-  subject: string;
 }
 
 const HorizontalList: React.FC<IProps> = (props) => {
-  const limit = 5;
-  const [list, setList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const loadingItems = Array.from(Array(limit).keys());
-
-  const getList = async () => {
-    setIsLoading(true);
-    const request = {
-      limit: limit,
-      offset: 0,
-    };
-    const response: any = await bookApi.getBySubjects(props?.subject, request);
-    setList(response?.data);
-    setIsLoading(false);
-  };
-
-  useEffect(() => {
-    getList();
-  }, []);
 
   return (
     <div className="mb-6">
@@ -35,17 +16,17 @@ const HorizontalList: React.FC<IProps> = (props) => {
         {props?.title}
       </h4>
       <div className="flex gap-4">
-        {list?.map((book, key) => (
+        {props?.list?.map((book: any, key: any) => (
           <div key={key} className="w-72">
             <BookThumbnailComponent item={book} />
           </div>
         ))}
-        {isLoading &&
+        {/* {isLoading &&
           loadingItems.map((_, key) => (
             <div key={key}>
               <BookThumbnailSkeleton />
             </div>
-          ))}
+          ))} */}
       </div>
     </div>
   );

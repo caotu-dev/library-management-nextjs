@@ -1,13 +1,13 @@
-"use client";
-
-import HorizontalList from "../components/HorizontalList";
+import BestSelling from "../components/BestSelling";
+import MostPopular from "../components/MostPopular";
+import NewCommer from "../components/NewCommer";
 
 const BookModule: React.FC<{}> = () => {
   return (
     <section className="p-4">
-      <HorizontalList title={`Best selling`} subject={`love`} />
-      <HorizontalList title={`Most popular`} subject={`fiction`} />
-      <HorizontalList title={`New commer`} subject={`history`} />
+      <BestSelling />
+      <MostPopular />
+      <NewCommer />
     </section>
   );
 };
