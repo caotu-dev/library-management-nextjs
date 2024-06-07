@@ -15,14 +15,14 @@ const HorizontalList: React.FC<IProps> = (props) => {
   const loadingItems = Array.from(Array(limit).keys());
 
   const getList = async () => {
-    setIsLoading(true)
+    setIsLoading(true);
     const request = {
       limit: limit,
       offset: 0,
     };
     const response: any = await bookApi.getBySubjects(props?.subject, request);
     setList(response?.data);
-    setIsLoading(false)
+    setIsLoading(false);
   };
 
   useEffect(() => {

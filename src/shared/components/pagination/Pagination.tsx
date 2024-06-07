@@ -16,7 +16,7 @@ const PaginationComponent: React.FC<IProps> = ({
   const calculatePagination = () => {
     // Calculate total pages
     const totalPages = Math.ceil(total / perPage);
-    
+
     // Create an array to store page details
     const pages = [];
 

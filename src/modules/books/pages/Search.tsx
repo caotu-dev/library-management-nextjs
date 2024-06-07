@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import BookThumbnailSkeleton from "@components/book-thumbnail-skeleton/BookThumbnailSkeleton";
 
-const SearchBookPage: React.FC<{}> = () => {
+const SearchBookPage: React.FC<any> = () => {
   const searchParams = useSearchParams();
   const loadingItems = Array.from(Array(10).keys());
 
@@ -34,7 +34,7 @@ const SearchBookPage: React.FC<{}> = () => {
 
   useEffect(() => {
     setKeyword(searchParams.get("q") ?? "");
-    setList([])
+    setList([]);
   }, [searchParams.get("q")]);
 
   useEffect(() => {

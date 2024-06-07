@@ -1,7 +1,6 @@
 "use client";
 
 import { RouterConfig } from "@/core/constants/router";
-import AuthGuard from "@/core/guards/AuthGuard";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 // import Link from "next/link";
 
@@ -61,4 +60,4 @@ const ListPage: React.FC<{}> = () => {
   );
 };
 
-export default AuthGuard(ListPage);
+export default ListPage;

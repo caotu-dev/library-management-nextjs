@@ -24,7 +24,7 @@ const BreadcrumbComponent: React.FC<IProps> = (props) => {
           </a>
         </li>
         {breadcrumbs?.map((br, key) => {
-          if(key === breadcrumbs.length - 1) return '';
+          if (key === breadcrumbs.length - 1) return "";
           return (
             <li key={key}>
               <div className="flex items-center">

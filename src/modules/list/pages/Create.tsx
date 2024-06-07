@@ -16,15 +16,17 @@ const ListCreatePage: React.FC<{}> = () => {
     },
   ];
 
-  const submit = async(e: any) => {
+  const submit = async (e: any) => {
     e.preventDefault();
-    const name = (document.getElementById('name') as HTMLInputElement)?.value;
-    const description = (document.getElementById('description') as HTMLInputElement)?.value;
-    if(!name) return;
-    const body = {name, description}
+    const name = (document.getElementById("name") as HTMLInputElement)?.value;
+    const description = (
+      document.getElementById("description") as HTMLInputElement
+    )?.value;
+    if (!name) return;
+    const body = { name, description };
     const response = await listApi.create(body);
-    console.log(response)
-  }
+    console.log(response);
+  };
 
   return (
     <section className="p-4">

@@ -27,7 +27,7 @@ const baseApi = {
     } catch (error) {
       return error;
     }
-  }
-}
+  },
+};
 
 export default baseApi;

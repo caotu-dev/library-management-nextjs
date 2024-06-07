@@ -7,7 +7,7 @@ const config: Config = {
     "./src/core/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/modules/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/shared/components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./public/icons"
+    "./public/icons",
   ],
   theme: {
     extend: {

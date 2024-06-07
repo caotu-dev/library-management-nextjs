@@ -10,8 +10,8 @@ export default function Header() {
   const [auth, setAuth] = useState(null);
 
   useEffect(() => {
-    setAuth(AuthUtils.getAuth())
-  }, [])
+    setAuth(AuthUtils.getAuth());
+  }, []);
 
   const logout = () => {
     AuthUtils.removeAuth();

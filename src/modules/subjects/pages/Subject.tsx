@@ -41,7 +41,7 @@ const SubjectModule: React.FC<{}> = () => {
     };
     const response: any = await bookApi.getBySubjects(
       subject?.toLowerCase(),
-      request
+      request,
     );
     setList(response.data);
     setTotal(response.total);

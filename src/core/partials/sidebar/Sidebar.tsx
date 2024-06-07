@@ -34,7 +34,7 @@ export default function Sidebar() {
         <hr className="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700"></hr>
         <ul className="space-y-2 font-medium">
           {appMenu.map((menu: any, key: number) => {
-            if(menu?.authentication && !auth) return '';  // Required login
+            if (menu?.authentication && !auth) return ""; // Required login
 
             if (menu?.children) {
               return (
