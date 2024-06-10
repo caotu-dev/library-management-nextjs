@@ -4,7 +4,7 @@ import { CreateListRequest } from "@/modules/list/types/list.model";
 
 const listApi = {
   baseApi: "https://dummyjson.com/todos",
-  getList: async (request?: { [key: string]: string }) => {
+  getList: async (request?: { [key: string | number]: string }) => {
     let urlParams = '';
     if(request) {
       const params = new URLSearchParams(request);

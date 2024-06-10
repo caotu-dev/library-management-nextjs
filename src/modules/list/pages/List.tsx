@@ -3,21 +3,17 @@
 import { RouterConfig } from "@/core/constants/router";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 import Link from "next/link";
-import TableAction from "../components/TableAction";
 import listApi from "@/shared/services/api/list.api";
-import { useEffect, useState } from "react";
-
-async function getTodoList() {
-  const response = await listApi.getList();
-  if (response.status === 200) {
-    return response?.data?.todos;
-  }
-
-  return [];
-}
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { useState } from "react";
+import TableAction from "../components/TableAction";
+import TableSkeleton from "../components/TableSkeleton";
+import PaginationComponent from "@/shared/components/pagination/Pagination";
 
 const ListPage: React.FC<{}> = () => {
+  const limit = 10;
   const [list, setList] = useState([]);
+  const [page, setPage] = useState(1);
 
   const breadcrumbs: any = [
     {
@@ -26,14 +22,41 @@ const ListPage: React.FC<{}> = () => {
     },
   ];
 
-  const getList = async () => {
-    const res = await getTodoList();
-    setList(res);
+  const getTodoList = () => {
+    const request = {
+      limit: limit,
+      skip: page * limit,
+    };
+    const response = listApi.getList(request as any);
+    return response;
   };
 
-  useEffect(() => {
-    getList();
-  }, []);
+  const useQueryTodos = () => {
+    const query: any = useQuery({
+      queryKey: ["todos", page],
+      queryFn: getTodoList,
+      placeholderData: keepPreviousData,
+    });
+    const total = query?.data?.data?.total;
+    const todolist = query?.data?.data?.todos;
+    const pageCount = Math.ceil(total / limit);
+    return {
+      ...query,
+      todolist,
+      total,
+      pageCount,
+    };
+  };
+
+  // Queries
+  const { todolist, isLoading, pageCount } = useQueryTodos();
+
+  const handlePageClick = (e: any) => {
+    const pageIdx = Number(e?.selected) ?? 0;
+    const currentPage = pageIdx + 1;
+    window.history.replaceState({}, '', RouterConfig.LIST + "?page=" + currentPage);
+    setPage(currentPage);
+  };
 
   return (
     <section className="p-4 pt-2">
@@ -63,27 +86,39 @@ const ListPage: React.FC<{}> = () => {
             </tr>
           </thead>
           <tbody>
-            {list?.map((item: any, key: number) => (
-              <tr
-                key={key}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-              >
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            {isLoading ? (
+              <TableSkeleton />
+            ) : (
+              todolist?.map((item: any, key: number) => (
+                <tr
+                  key={key}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
-                  {item?.todo}
-                </th>
-                <td className="px-6 py-4">
-                  {item?.completed ? "Done" : "Pending"}
-                </td>
-                <td className="px-6 py-4">
-                  <TableAction setList={setList} item={item} />
-                </td>
-              </tr>
-            ))}
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    {item?.todo}
+                  </th>
+                  <td className="px-6 py-4">
+                    {item?.completed ? "Done" : "Pending"}
+                  </td>
+                  <td className="px-6 py-4">
+                    <TableAction setList={setList} item={item} />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
+        {todolist?.length > 0 && (
+          <div className="mt-4 flex justify-center w-full">
+            <PaginationComponent
+              handlePageClick={handlePageClick}
+              total={pageCount}
+            />
+          </div>
+        )}
       </div>
     </section>
   );

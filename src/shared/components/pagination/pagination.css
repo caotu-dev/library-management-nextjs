@@ -1,0 +1,20 @@
+.pagination ul {
+  display: flex;
+  gap: 5px;
+}
+
+.pagination ul > li {
+  display: inline;
+  padding: 0px 10px;
+  border-radius: 5px;
+}
+
+.pagination ul > li:not(.break):hover {
+  background: white;
+  color: black;
+}
+
+.pagination ul > li.selected {
+  background: white;
+  color: black;
+}
