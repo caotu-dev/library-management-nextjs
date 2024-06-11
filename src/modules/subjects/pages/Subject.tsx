@@ -1,57 +1,45 @@
 import { RouterConfig } from "@/core/constants/router";
-import BookThumbnailComponent from "@/shared/components/book-thumbnail/BookThumbnail";
-import PaginationComponent from "@/shared/components/pagination/Pagination";
-import bookApi from "@/shared/services/api/book.api";
+import { Subjects } from "@/core/constants/subject";
+import CommonUtils from "@/shared/utils/common.util";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
+import Link from "next/link";
 
-async function getBooksBySubject(subject:string) {
-  const request = {
-    limit: 20,
-    offset: 0,
-  };
-  const response: any = await bookApi.getBySubjects(
-    subject?.toLowerCase(),
-    request,
-  );
-
-  return response;
-}
-
-export default async function SubjectPage({ subject }: { subject: string }) {
-
+export default async function SubjectPage() {
   const breadcrumbs: any = [
     {
       title: "Subjects",
       url: RouterConfig.SUBJECT,
     },
-    {
-      title: subject,
-      url: "",
-    },
   ];
 
-  const data = await getBooksBySubject(subject);
+  const chunkSubjects = CommonUtils.splitArrayIntoChunks(Subjects, 5);
+  const subjectSlug = (subject: string) => {
+    return CommonUtils.toSlug(subject);
+  };
 
   return (
     <section className="p-4">
       <BreadcrumbComponent breadcrumbs={breadcrumbs} />
-      <div className="flex flex-wrap gap-4 pt-4">
-        {data?.data?.map((book: any, key: number) => (
-          <div key={key} className="md:w-64">
-            <BookThumbnailComponent item={book} />
-          </div>
+      <div className="flex flex-wrap gap-10 px-4 py-5 text-sm text-gray-500 dark:text-gray-400 md:grid-cols-3 md:px-6">
+        {chunkSubjects.map((subjects, key) => (
+          <ul
+            key={key}
+            className="space-y-4 sm:mb-4 md:mb-0"
+            aria-labelledby="mega-menu-full-cta-button"
+          >
+            {subjects.map((subject, subKey) => (
+              <li key={subKey}>
+                <Link
+                  href={`${RouterConfig.SUBJECT}/${subjectSlug(subject)}`}
+                  className="hover:underline hover:text-blue-600 dark:hover:text-blue-500"
+                >
+                  {subject}
+                </Link>
+              </li>
+            ))}
+          </ul>
         ))}
       </div>
-      {/* {list?.length > 0 && (
-        <div className="mt-4 flex justify-center w-full">
-          <PaginationComponent
-            perPage={perpage}
-            setPage={setCurrentPage}
-            currentPage={currentPage}
-            total={total}
-          />
-        </div>
-      )} */}
     </section>
   );
-};
+}

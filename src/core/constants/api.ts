@@ -1,3 +1,3 @@
-export const API_URL = "https://openlibrary.org/";
-export const COVER_URL = "https://covers.openlibrary.org/";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const COVER_URL = process.env.NEXT_PUBLIC_COVER_URL;
 export const PEOPLE = "t_cao";

@@ -3,13 +3,11 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from "@/core/layouts/MainLayout";
 import { Toaster } from "react-hot-toast";
+import { SEODefaultConfig } from "@/core/constants/seo";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Books Heaven",
-  description: "Look, books everywhere everytime",
-};
+export const metadata: Metadata = SEODefaultConfig;
 
 export default function RootLayout({
   children,

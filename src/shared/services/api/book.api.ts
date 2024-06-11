@@ -46,9 +46,25 @@ const bookApi = {
 
   getById: async (olid: string) => {
     const response = await baseApi.getData(`books/${olid}`);
-    console.log(response);
+    return {
+      ...response,
+      thumbnail_small: `${COVER_URL}b/olid/${olid}-S.jpg`,
+      thumbnail_medium: `${COVER_URL}b/olid/${olid}-M.jpg`,
+      thumbnail_large: `${COVER_URL}b/olid/${olid}-L.jpg`,
+      publisher: response?.publishers?.length ? response?.publishers[0] : 'Unknown'
+    };
+  },
+
+  getAuthor: async (authorId: string) => {
+    const response = await baseApi.getData(`authors/${authorId}`);
     return response;
   },
+
+  getAuthorWorks: async (authorId: string) => {
+    const response = await baseApi.getData(`authors/${authorId}/works`);
+    return response;
+  },
+
 };
 
 export default bookApi;

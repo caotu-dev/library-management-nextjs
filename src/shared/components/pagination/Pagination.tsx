@@ -6,12 +6,14 @@ interface IProps {
   total: number;
   handlePageClick: (page: any) => void;
   breakLabel?: string;
+  activePage?: number
 }
 
 const PaginationComponent: React.FC<IProps> = ({
   handlePageClick,
   total,
   breakLabel = "...",
+  activePage
 }) => {
   return (
     <div className="pagination">
@@ -23,6 +25,8 @@ const PaginationComponent: React.FC<IProps> = ({
       pageCount={total}
       previousLabel="< previous"
       renderOnZeroPageCount={null}
+      initialPage={activePage}
+      disableInitialCallback={true}
     />
     </div>
   );

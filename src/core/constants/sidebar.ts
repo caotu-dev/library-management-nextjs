@@ -1,10 +1,12 @@
+import CommonUtils from "@/shared/utils/common.util";
 import { RouterConfig } from "./router";
 import { Subjects } from "./subject";
 
 const subjectMenu = Subjects.map((sj) => {
+  const slug = CommonUtils.toSlug(sj);
   return {
     title: sj,
-    url: RouterConfig.SUBJECT + `?name=${sj}`,
+    url: `${RouterConfig.SUBJECT}/${slug}`,
   };
 });
 

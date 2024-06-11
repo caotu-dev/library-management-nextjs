@@ -3,7 +3,6 @@ export const RouterConfig = {
   BOOKS: "/books",
   AUTHORS: "/authors",
   SUBJECT: "/subjects",
-  SEARCH: "/search",
   LIST: "/lists",
   LIST_CREATE: "/lists/create",
   LOGIN: "/login",

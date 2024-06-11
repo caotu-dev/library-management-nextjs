@@ -13,7 +13,7 @@ export default function HeaderSearch() {
     )?.value?.trim();
     if (!inputVal) return;
 
-    router.push(RouterConfig.SEARCH + `?q=${inputVal}`);
+    router.push(RouterConfig.BOOKS + `?q=${inputVal}`);
   };
 
   return (

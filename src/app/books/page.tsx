@@ -6,5 +6,7 @@ export default function Page({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const keyword = searchParams?.q?.toString() ?? "";
-  return <SearchBookPage keyword={keyword} />;
+  const page = searchParams?.page ? Number(searchParams?.page) : 0;
+
+  return <SearchBookPage keyword={keyword} page={page} />;
 }

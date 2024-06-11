@@ -5,15 +5,19 @@ import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 import Link from "next/link";
 import listApi from "@/shared/services/api/list.api";
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TableAction from "../components/TableAction";
 import TableSkeleton from "../components/TableSkeleton";
 import PaginationComponent from "@/shared/components/pagination/Pagination";
+import CommonUtils from "@/shared/utils/common.util";
+import { useSearchParams } from "next/navigation";
 
 const ListPage: React.FC<{}> = () => {
   const limit = 10;
+  const searchParams = useSearchParams();
+  const currentPage: number = Number(searchParams?.get("page")) ?? 1;
   const [list, setList] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(currentPage);
 
   const breadcrumbs: any = [
     {
@@ -54,9 +58,15 @@ const ListPage: React.FC<{}> = () => {
   const handlePageClick = (e: any) => {
     const pageIdx = Number(e?.selected) ?? 0;
     const currentPage = pageIdx + 1;
-    window.history.replaceState({}, '', RouterConfig.LIST + "?page=" + currentPage);
+    CommonUtils.updateUrlParams(RouterConfig.LIST + "?page=" + currentPage);
     setPage(currentPage);
   };
+
+  useEffect(() => {
+    if(todolist?.length) {
+      setList(todolist)
+    }
+  }, [todolist])
 
   return (
     <section className="p-4 pt-2">
@@ -89,7 +99,7 @@ const ListPage: React.FC<{}> = () => {
             {isLoading ? (
               <TableSkeleton />
             ) : (
-              todolist?.map((item: any, key: number) => (
+              list?.map((item: any, key: number) => (
                 <tr
                   key={key}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -111,11 +121,12 @@ const ListPage: React.FC<{}> = () => {
             )}
           </tbody>
         </table>
-        {todolist?.length > 0 && (
+        {list?.length > 0 && (
           <div className="mt-4 flex justify-center w-full">
             <PaginationComponent
               handlePageClick={handlePageClick}
               total={pageCount}
+              activePage={page}
             />
           </div>
         )}

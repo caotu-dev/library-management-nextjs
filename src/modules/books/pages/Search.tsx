@@ -1,5 +1,7 @@
 import BookThumbnailComponent from "@/shared/components/book-thumbnail/BookThumbnail";
+import PaginationComponent from "@/shared/components/pagination/Pagination";
 import bookApi from "@/shared/services/api/book.api";
+import SearchPagination from "../components/SearchPagination";
 
 async function getSearchedBooks(keyword: string) {
   const request = {
@@ -11,7 +13,15 @@ async function getSearchedBooks(keyword: string) {
   return response;
 }
 
-export default async function SearchPage({ keyword }: { keyword: string }) {
+interface IProps {
+  keyword: string;
+  page: number;
+}
+
+export default async function SearchPage({
+  keyword,
+  page,
+}: IProps) {
   const data = await getSearchedBooks(keyword ?? "");
 
   return (
@@ -26,16 +36,9 @@ export default async function SearchPage({ keyword }: { keyword: string }) {
           </div>
         ))}
       </div>
-      {/* {data?.data?.length > 0 && (
-        <div className="mt-4 flex justify-center w-full">
-          <PaginationComponent
-            perPage={perpage}
-            setPage={setCurrentPage}
-            currentPage={currentPage}
-            total={total}
-          />
-        </div>
-      )} */}
+      {data?.data?.length > 0 && (
+        <SearchPagination total={data?.total} currentPage={page} keyword={keyword} />
+      )}
     </section>
   );
 }
