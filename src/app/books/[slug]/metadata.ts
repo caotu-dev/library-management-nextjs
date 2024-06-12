@@ -9,7 +9,7 @@ export async function getPageMetadata(slug: string): Promise<Metadata> {
     const id = CommonUtils.slugToID(slug);
 
     const book = await bookApi.getById(id);
-    const pageUrl = AppConfig.APP_URL + RouterConfig.SEARCH + '/' + slug;
+    const pageUrl = AppConfig.APP_URL + RouterConfig.BOOKS + '/' + slug;
 
     return {
         ...SEODefaultConfig,

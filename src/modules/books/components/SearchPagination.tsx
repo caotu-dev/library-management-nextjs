@@ -14,7 +14,7 @@ export default function SearchPagination({ total, currentPage, keyword }: IProps
   const handlePageClick = (e: any) => {
     const pageIndex = e?.selected;
     const currentPage = pageIndex + 1;
-    router.push(RouterConfig.SEARCH + "?q="+keyword + "&page="+currentPage);
+    router.push(RouterConfig.BOOKS + "?q="+keyword + "&page="+currentPage);
   };
   return (
     <div className="mt-4 flex justify-center w-full">
