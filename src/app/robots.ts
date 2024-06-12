@@ -1,4 +1,5 @@
 import { AppConfig } from '@/core/constants/app'
+import { RouterConfig } from '@/core/constants/router'
 import { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
@@ -15,6 +16,10 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
 
-    sitemap: AppConfig.APP_URL + '/sitemap.xml',
+    sitemap: [
+      AppConfig.APP_URL + '/sitemap.xml',
+      AppConfig.APP_URL + `${RouterConfig}/sitemap.xml`,
+      AppConfig.APP_URL + `${RouterConfig}/sitemap.xml`
+    ],
   }
 }

@@ -8,7 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     const listSubjects = [...Subjects];
     return listSubjects.map(subject => {
         const slug = CommonUtils.toSlug(subject);
-        const url = `${AppConfig.APP_URL}/${RouterConfig.SUBJECT}/${slug}`;
+        const url = `${AppConfig.APP_URL}${RouterConfig.SUBJECT}/${slug}`;
         return {
             url: url,
             lastModified: new Date(),
