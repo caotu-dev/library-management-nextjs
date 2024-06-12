@@ -29,6 +29,12 @@ export const SidebarMenu = [
     title: "My Todo-Read",
     url: RouterConfig.LIST,
     icon: "",
-    authentication: true,
+    authentication: false,
+  },
+  {
+    title: "Forums",
+    url: RouterConfig.FORUM,
+    icon: "",
+    authentication: false,
   },
 ];

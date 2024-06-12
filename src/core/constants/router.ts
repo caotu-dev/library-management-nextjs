@@ -6,4 +6,5 @@ export const RouterConfig = {
   LIST: "/lists",
   LIST_CREATE: "/lists/create",
   LOGIN: "/login",
+  FORUM: "/forums",
 };
