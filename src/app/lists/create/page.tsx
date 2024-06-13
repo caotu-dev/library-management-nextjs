@@ -1,5 +1,10 @@
+import QueryProviders from "@/app/provider";
 import ListCreatePage from "@/modules/list/pages/Create";
 
 export default function Page() {
-  return <ListCreatePage />;
+  return (
+    <QueryProviders>
+      <ListCreatePage />
+    </QueryProviders>
+  );
 }

@@ -4,8 +4,8 @@ import { RouterConfig } from "@/core/constants/router";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 import Link from "next/link";
 import listApi from "@/shared/services/api/list.api";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useQuery, keepPreviousData, QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import TableAction from "../components/TableAction";
 import TableSkeleton from "../components/TableSkeleton";
 import PaginationComponent from "@/shared/components/pagination/Pagination";
@@ -16,8 +16,21 @@ const ListPage: React.FC<{}> = () => {
   const limit = 10;
   const searchParams = useSearchParams();
   const currentPage: number = Number(searchParams?.get("page")) ?? 1;
-  const [list, setList] = useState([]);
   const [page, setPage] = useState(currentPage);
+
+  const initialData = {
+    "todos": [
+      {
+        "id": 1,
+        "todo": "Do something nice for someone I care about",
+        "completed": true,
+        "userId": 26
+      },
+    ],
+    "total": 150,
+    "skip": 0,
+    "limit": 30
+  }
 
   const breadcrumbs: any = [
     {
@@ -39,7 +52,15 @@ const ListPage: React.FC<{}> = () => {
     const query: any = useQuery({
       queryKey: ["todos", page],
       queryFn: getTodoList,
-      placeholderData: keepPreviousData,
+      initialData: {
+        status: 200,
+        data: initialData
+      },
+      // initialData: () => {
+      //    Use a todo from the 'todos' query as the initial data for this todo query
+      //   return queryClient.getQueryData(['todos'])
+      // },
+      // placeholderData: keepPreviousData,
     });
     const total = query?.data?.data?.total;
     const todolist = query?.data?.data?.todos;
@@ -53,7 +74,7 @@ const ListPage: React.FC<{}> = () => {
   };
 
   // Queries
-  const { todolist, isLoading, pageCount } = useQueryTodos();
+  const { todolist, isLoading, pageCount, data } = useQueryTodos();
 
   const handlePageClick = (e: any) => {
     const pageIdx = Number(e?.selected) ?? 0;
@@ -61,12 +82,6 @@ const ListPage: React.FC<{}> = () => {
     CommonUtils.updateUrlParams(RouterConfig.LIST + "?page=" + currentPage);
     setPage(currentPage);
   };
-
-  useEffect(() => {
-    if(todolist?.length) {
-      setList(todolist)
-    }
-  }, [todolist])
 
   return (
     <section className="p-4 pt-2">
@@ -96,10 +111,8 @@ const ListPage: React.FC<{}> = () => {
             </tr>
           </thead>
           <tbody>
-            {isLoading ? (
-              <TableSkeleton />
-            ) : (
-              list?.map((item: any, key: number) => (
+            { (
+              data?.data?.todos?.map((item: any, key: number) => (
                 <tr
                   key={key}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -114,14 +127,14 @@ const ListPage: React.FC<{}> = () => {
                     {item?.completed ? "Done" : "Pending"}
                   </td>
                   <td className="px-6 py-4">
-                    <TableAction setList={setList} item={item} />
+                    <TableAction page={page} item={item} />
                   </td>
                 </tr>
               ))
             )}
           </tbody>
         </table>
-        {list?.length > 0 && (
+        {todolist?.length > 0 && (
           <div className="mt-4 flex justify-center w-full">
             <PaginationComponent
               handlePageClick={handlePageClick}

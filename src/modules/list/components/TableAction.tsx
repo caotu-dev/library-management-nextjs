@@ -1,18 +1,63 @@
 import listApi from "@/shared/services/api/list.api";
 import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export default function TableAction({ item, setList }: any) {
+interface Iprops {
+  item: any;
+  page: number;
+}
+
+export default function TableAction({ item, page }: Iprops) {
+  const queryClient = useQueryClient();
+
+  const mutationDeletion = useMutation({
+    mutationFn: () => listApi.delete(item?.id),
+    onSuccess: () => {
+      toast.success("Successfully deleted!");
+      queryClient.setQueryData(['todos', page], (old: any) => {
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            todos: old?.data?.todos?.filter((todo: any) => todo?.id !== item?.id)
+          }
+        }
+      });
+
+      // Mark that new todo state has been updated and need to be refeched
+      // queryClient.invalidateQueries({ queryKey: ['todos'] })
+    }
+  });
+
+  const mutationUpdate = useMutation({
+    mutationFn: () => listApi.update(item?.id, { completed: true }),
+    onSuccess: () => {
+      toast.success("Successfully mark as done!");
+
+      queryClient.setQueryData(['todos', page], (old: any) => {
+        return {
+          ...old,
+          data: {
+            ...old.data,
+            todos: old?.data?.todos?.map((todo: any) => {
+              if (todo?.id === item?.id) {
+                return { ...todo, completed: true };
+              }
+              return todo;
+            })
+          }
+        }
+      });
+
+      // Mark that new todo state has been updated and need to be refeched
+      // queryClient.invalidateQueries({ queryKey: ['todos'] });
+    }
+  });
+
   const handleDelete = async () => {
     const confirmed = confirm("Are you sure you want to delete this task");
     if (!confirmed) return;
-
-    const response = await listApi.delete(item?.id);
-    if (response.status === 200) {
-      toast.success("Successfully deleted!");
-      setList((list: any) => {
-        return list.filter((_: any) => _?.id !== item?.id);
-      });
-    }
+    mutationDeletion.mutate();
   };
 
   const handleMarkAsDone = async () => {
@@ -21,18 +66,7 @@ export default function TableAction({ item, setList }: any) {
     );
     if (!confirmed) return;
 
-    const response = await listApi.update(item?.id, { completed: true });
-    if (response.status === 200) {
-      toast.success("Successfully mark as done!");
-      setList((list: any) => {
-        return list.map((_: any) => {
-          if (_?.id === item?.id) {
-            return { ..._, completed: true };
-          }
-          return _;
-        });
-      });
-    }
+    mutationUpdate.mutate();
   };
 
   return (

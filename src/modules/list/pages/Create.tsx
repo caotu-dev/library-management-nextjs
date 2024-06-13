@@ -5,6 +5,7 @@ import listApi from "@/shared/services/api/list.api";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
 
 const ListCreatePage: React.FC<{}> = () => {
   const router = useRouter();
@@ -20,16 +21,26 @@ const ListCreatePage: React.FC<{}> = () => {
     },
   ];
 
+  const mutation = useMutation({
+    mutationFn: (body : any) => {
+      return listApi.create(body);
+    },
+    retry: 3,
+    onSuccess: () => {
+      toast.success("Successfully created!");
+      router.push(RouterConfig.LIST);
+    },
+  })
+
   const submit = async (e: any) => {
     e.preventDefault();
     const todo = (document.getElementById("name") as HTMLInputElement)?.value;
     if (!todo) return;
+    mutation?.reset(); // Remove error message return from mutation if any
     const body = { todo, completed: false, userId: 5 };
-    const response = await listApi.create(body);
-    if (response.status === 201) {
-      toast.success("Successfully created!");
-      router.push(RouterConfig.LIST);
-    }
+    mutation.mutate(body);
+    // Or use mutateAsync for asynchronous without callback func
+    // const response = await mutation.mutateAsync(body);
   };
 
   return (
@@ -66,9 +77,11 @@ const ListCreatePage: React.FC<{}> = () => {
               placeholder="Enter description"
             ></textarea>
           </div>
+          {mutation?.isError && <span className="text-red-500 text-sm">{mutation.error.message}</span>}
 
           <button
             type="submit"
+            disabled={mutation?.isPending}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Save
