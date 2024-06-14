@@ -4,33 +4,27 @@ import { RouterConfig } from "@/core/constants/router";
 import BreadcrumbComponent from "@components/breadcrumb/Breadcrumb";
 import Link from "next/link";
 import listApi from "@/shared/services/api/list.api";
-import { useQuery, keepPreviousData, QueryClient, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  keepPreviousData,
+  QueryClient,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import TableAction from "../components/TableAction";
 import TableSkeleton from "../components/TableSkeleton";
 import PaginationComponent from "@/shared/components/pagination/Pagination";
 import CommonUtils from "@/shared/utils/common.util";
 import { useSearchParams } from "next/navigation";
+import ListCreatePage from "./Create";
+import CreateListForm from "../components/CreateListForm";
 
 const ListPage: React.FC<{}> = () => {
   const limit = 10;
   const searchParams = useSearchParams();
   const currentPage: number = Number(searchParams?.get("page")) ?? 1;
   const [page, setPage] = useState(currentPage);
-
-  const initialData = {
-    "todos": [
-      {
-        "id": 1,
-        "todo": "Do something nice for someone I care about",
-        "completed": true,
-        "userId": 26
-      },
-    ],
-    "total": 150,
-    "skip": 0,
-    "limit": 30
-  }
+  const queryClient = useQueryClient();
 
   const breadcrumbs: any = [
     {
@@ -52,14 +46,11 @@ const ListPage: React.FC<{}> = () => {
     const query: any = useQuery({
       queryKey: ["todos", page],
       queryFn: getTodoList,
-      initialData: {
-        status: 200,
-        data: initialData
+
+      initialData: () => {
+         //Use a todo from the 'todos' query as the initial data for this todo query
+        return queryClient.getQueryData(['todos', page])
       },
-      // initialData: () => {
-      //    Use a todo from the 'todos' query as the initial data for this todo query
-      //   return queryClient.getQueryData(['todos'])
-      // },
       // placeholderData: keepPreviousData,
     });
     const total = query?.data?.data?.total;
@@ -96,7 +87,8 @@ const ListPage: React.FC<{}> = () => {
       </div>
 
       <div className="relative overflow-x-auto pt-4">
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <CreateListForm page={page} />
+        <table className="mt-4 w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
               <th scope="col" className="px-6 py-3 ">
@@ -111,27 +103,25 @@ const ListPage: React.FC<{}> = () => {
             </tr>
           </thead>
           <tbody>
-            { (
-              data?.data?.todos?.map((item: any, key: number) => (
-                <tr
-                  key={key}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+            {data?.data?.todos?.map((item: any, key: number) => (
+              <tr
+                key={key}
+                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+              >
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  <th
-                    scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    {item?.todo}
-                  </th>
-                  <td className="px-6 py-4">
-                    {item?.completed ? "Done" : "Pending"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <TableAction page={page} item={item} />
-                  </td>
-                </tr>
-              ))
-            )}
+                  {item?.todo}
+                </th>
+                <td className="px-6 py-4">
+                  {item?.completed ? "Done" : "Pending"}
+                </td>
+                <td className="px-6 py-4">
+                  <TableAction page={page} item={item} />
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         {todolist?.length > 0 && (
