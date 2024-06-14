@@ -1,6 +1,7 @@
 import { RouterConfig } from "@/core/constants/router";
 import CommonUtils from "@/shared/utils/common.util";
 import Link from "next/link";
+import { TPost } from "../types/post.model";
 
 interface IProps {
   post: TPost;

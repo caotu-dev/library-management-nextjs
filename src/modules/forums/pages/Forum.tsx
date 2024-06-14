@@ -7,6 +7,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import postApi from "@/shared/services/api/post.api";
 import React from "react";
 import LoadingIcon from "@/shared/components/icons/Loading";
+import { TPost } from "../types/post.model";
 
 const ForumPage: React.FC<{}> = () => {
   const limit = 20;
